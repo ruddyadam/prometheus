@@ -22,14 +22,16 @@ score
 import pygame, sys
 from pygame.locals import *
 
+screenSize = (640, 480)
 pygame.init()
 fpsClock = pygame.time.Clock()
 
 blue = (0, 0, 255)
 shark = pygame.image.load('shark.jpg')
+food = pygame.image.load('dsham-large.png')
 
 
-screen = pygame.display.set_mode((640, 480))
+screen = pygame.display.set_mode(screenSize)
 bg = screen.fill(blue)
 pygame.display.set_caption('Ultimate Fish Game')
 
