@@ -22,45 +22,50 @@ score
 import pygame, sys
 from pygame.locals import *
 
-SCREENRECT = Rect(0,0,640,480)
+screenSize = Rect(0,0,640,480)  #sets the screen size
 #screenSize = (640, 480)
-fpsClock = pygame.time.Clock()
+fpsClock = pygame.time.Clock()  #this is for syncing fps in the game.  currently unused
 BLUE = (0, 0, 255)
 bg_image = 'aquarium.jpg'
 shark = 'shark.png'
 food = 'dsham.png'
 
 
-def main():
-    pygame.init()
+def main():  #the main?
+    pygame.init()  #this initializes mygame
 
-    screen = pygame.display.set_mode((SCREENRECT.size),0,32)
-    pygame.display.set_caption('Ultimate Fish Game')
+    screen = pygame.display.set_mode((screenSize.size),0,32)  #this creates the screen
+    pygame.display.set_caption('Ultimate Fish Game')#the title
     
-    background = pygame.image.load(bg_image).convert()
-    mouse_c = pygame.image.load(shark).convert_alpha()
+    background = pygame.image.load(bg_image).convert() #this prepares the jpg image
+    mouse_cursor = pygame.image.load(food).convert_alpha() #this prepares the png image - 'alpha' for transparency
+    pygame.mouse.set_visible(False)         #this hides the mouse pointer
     
     #bg = screen.fill(BLUE)
     
     while True: #main game loop
-        for event in pygame.event.get():
+        for event in pygame.event.get()
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
 
-        screen.blit(background, (0,0))   
+        screen.blit(background, (0,0))      #this keeps redrawing the background, so no trails on mouse_cursor image
 
-        x,y = pygame.mouse.get_pos()
-        x -= mouse_c.get_width()/2
-        y -= mouse_c.get_height()/2
+        x,y = pygame.mouse.get_pos()        #gets the mouse position
+        x -= mouse_cursor.get_width()/2     #these get the center of the mouse cursor image
+        y -= mouse_cursor.get_height()/2    #these get the center of the mouse cursor image
 
-        screen.blit(mouse_c,(x,y))
+        screen.blit(mouse_cursor,(x,y))     #not sure what this does
 
-        pygame.display.update()
+        pygame.display.update()  #not sure what this does
+
+## todo:    stamp a ham on mouseclick
+##          draw a shark on the page (and make it move towards food) 
+##          
+##
 
 
-
-main()
+main()  #starts the main() def
 
 
 #class sharkSprite(pygame.sprite.Sprite):
