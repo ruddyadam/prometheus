@@ -22,18 +22,46 @@ score
 import pygame, sys
 from pygame.locals import *
 
-screenSize = (640, 480)
-pygame.init()
+SCREENRECT = Rect(0,0,640,480)
+#screenSize = (640, 480)
 fpsClock = pygame.time.Clock()
+BLUE = (0, 0, 255)
+bg_image = 'aquarium.jpg'
+shark = 'shark.png'
+food = 'dsham.png'
 
-blue = (0, 0, 255)
-shark = pygame.image.load('shark.jpg')
-food = pygame.image.load('dsham-large.png')
+
+def main():
+    pygame.init()
+
+    screen = pygame.display.set_mode((SCREENRECT.size),0,32)
+    pygame.display.set_caption('Ultimate Fish Game')
+    
+    background = pygame.image.load(bg_image).convert()
+    mouse_c = pygame.image.load(shark).convert_alpha()
+    
+    #bg = screen.fill(BLUE)
+    
+    while True: #main game loop
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.blit(background, (0,0))   
+
+        x,y = pygame.mouse.get_pos()
+        x -= mouse_c.get_width()/2
+        y -= mouse_c.get_height()/2
+
+        screen.blit(mouse_c,(x,y))
+
+        pygame.display.update()
 
 
-screen = pygame.display.set_mode(screenSize)
-bg = screen.fill(blue)
-pygame.display.set_caption('Ultimate Fish Game')
+
+main()
+
 
 #class sharkSprite(pygame.sprite.Sprite):
     
@@ -43,12 +71,7 @@ pygame.display.set_caption('Ultimate Fish Game')
 
 
 
-while True: #main game loop
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-        pygame.display.update()
+
 """
         if event.type == KEYDOWN:
             if event.key = K_RIGHT:
