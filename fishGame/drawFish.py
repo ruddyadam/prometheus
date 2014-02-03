@@ -8,7 +8,7 @@ import math
 
 pygame.init()
 screen = pygame.display.set_mode((640,480),0,32)
-pygame.display.set_caption('Left clicks : polygon.  Drag Right click : eye.  ESC : clear.  Enter : coordinates')
+pygame.display.set_caption('3+ Left clicks : polygon.  Drag Right click : eye.  ESC : clear.  Enter : coordinates')
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 clicks = []
