@@ -1,6 +1,14 @@
 #drawFish.py
-#this quick and dirty fish image coordinate maker took me 5+ hours
+"""
+this quick and dirty fish image coordinate maker took me 5+ hours
+Usage:
+-Left click: 3 or more times to create a blue polygon
+-Right click: click and drag to create a circle with radius of drag distance
+-Enter: returns the coordinates of polygon, circle, and circle radius
+-Tab: draw a default fish
+-Escape: clear the screen
 
+"""
 import pygame, sys
 from pygame.locals import *
 #from Tkinter import Tk
@@ -8,13 +16,20 @@ import math
 
 pygame.init()
 screen = pygame.display.set_mode((640,480),0,32)
-pygame.display.set_caption('3+ Left clicks : polygon.  Drag Right click : eye.  ESC : clear.  Enter : coordinates')
+pygame.display.set_caption('3+ L-clicks: polygon | Drag R-click: eye | ESC: clear | Enter: coords | Tab: a fish')
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
+
 clicks = []
 circleCenter = (0,0)
-x1,x2,y1,y2 = 0,0,0,0
 circleRad = 0
+ 
+defClicks = [(71, 86), (40, 97), (41, 56), (69, 74), (122, 48), (161, 77), (124, 101)]
+defCircleCenter = (128, 67)
+defCircleRad = 7
+
+x1,x2,x3,y1,y2,y3 = 0,0,0,0,0,0
+
 
 
 while True:
@@ -58,8 +73,27 @@ while True:
                 c.clipboard_append(str(clicks).strip('[]'))
                 c.destroy()
                 """
-    
-
+            """
+            if event.key == K_SPACE:
+                if (clicks not []) and (circleRad not == 0):
+                    clicks = [] #erases polygon
+                    circleRad = 0 #erases circle(s)
+                    screen.fill((0,0,0)) #fills the screen with black
+                    screen.lock()
+                    pygame.draw.polygon(screen,BLUE,defClicks,0)
+                    screen.unlock()
+                    screen.lock()
+                    pygame.draw.circle(screen,YELLOW,defCircleCenter,circleRad,0)
+                    screen.unlock()
+            """
+            if event.key == K_TAB:
+                screen.lock()
+                pygame.draw.polygon(screen,BLUE,defClicks,0)
+                screen.unlock()
+                screen.lock()
+                pygame.draw.circle(screen,YELLOW,defCircleCenter,defCircleRad,0)
+                screen.unlock()
+                
 
 
         
