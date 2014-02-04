@@ -44,7 +44,7 @@ def main():  #the main?
     #bg = screen.fill(BLUE)
     
     while True: #main game loop
-        for event in pygame.event.get()
+        for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
