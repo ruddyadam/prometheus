@@ -24,9 +24,9 @@ clicks = []
 circleCenter = (0,0)
 circleRad = 0
  
-defClicks = [(71, 86), (40, 97), (41, 56), (69, 74), (122, 48), (161, 77), (124, 101)]
-defCircleCenter = (128, 67)
-defCircleRad = 7
+dClicks = [(71, 86), (40, 97), (41, 56), (69, 74), (122, 48), (161, 77), (124, 101)]
+dCircleCenter = (128, 67)
+dCircleRad = 7
 
 x1,x2,x3,y1,y2,y3 = 0,0,0,0,0,0
 
@@ -44,8 +44,7 @@ while True:
             if pygame.mouse.get_pressed() == (False, False, True): #if right click
                 circleCenter = x1,y1 = (pygame.mouse.get_pos())
 
-        if pygame.mouse.get_pressed() == (False, False, True):
-            circleRad = 0
+        if pygame.mouse.get_pressed() == (False, False, True): #right click
             x2, y2 = pygame.mouse.get_pos()
             circleRad = int(math.hypot(abs(x1-x2), abs(y1-y2)))
             #print circleRad
@@ -75,23 +74,23 @@ while True:
                 """
             """
             if event.key == K_SPACE:
-                if (clicks not []) and (circleRad not == 0):
+                if clicks != [] or (circleRad != 0):
                     clicks = [] #erases polygon
                     circleRad = 0 #erases circle(s)
                     screen.fill((0,0,0)) #fills the screen with black
                     screen.lock()
-                    pygame.draw.polygon(screen,BLUE,defClicks,0)
+                    pygame.draw.polygon(screen,BLUE,dClicks,0)
                     screen.unlock()
                     screen.lock()
-                    pygame.draw.circle(screen,YELLOW,defCircleCenter,circleRad,0)
+                    pygame.draw.circle(screen,YELLOW,dCircleCenter,dcircleRad,0)
                     screen.unlock()
             """
             if event.key == K_TAB:
                 screen.lock()
-                pygame.draw.polygon(screen,BLUE,defClicks,0)
+                pygame.draw.polygon(screen,BLUE,dClicks,0)
                 screen.unlock()
                 screen.lock()
-                pygame.draw.circle(screen,YELLOW,defCircleCenter,defCircleRad,0)
+                pygame.draw.circle(screen,YELLOW,dCircleCenter,dCircleRad,0)
                 screen.unlock()
                 
 
