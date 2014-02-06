@@ -7,8 +7,8 @@ from pygame.locals import *
 
 pygame.init()
 
-screenSize = Rect(0,0,640,480)
-screen = pygame.display.set_mode((screenSize.size),0,32)
+screenRect = Rect(0,0,640,480)
+screen = pygame.display.set_mode((screenRect.size),0,32)
 color = (255,255,255)
 radius = (10)
 #bg_image = 'aquarium.jpg'
@@ -23,9 +23,9 @@ while True: #main game loop
 
     
     
-    screen.lock()
+    #screen.lock()
     pygame.draw.circle(screen, color, pygame.mouse.get_pos(), radius)
-    screen.unlock()
+    #screen.unlock()
 
     screen.blit(screen, (0,0))
 
