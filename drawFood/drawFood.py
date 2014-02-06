@@ -21,12 +21,17 @@ while True: #main game loop
             pygame.quit()
             sys.exit()
 
+    x,y = pygame.mouse.get_pos()
+    food = Rect(x-3,y-3,8,8)
+            
     screen.blit(background, (0,0))
     
     screen.lock()
     #pygame.draw.circle(screen, color, pygame.mouse.get_pos(), radius)
+    pygame.draw.rect(screen, color, food, 0)
     screen.unlock()
 
     
+
 
     pygame.display.update()
