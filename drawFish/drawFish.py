@@ -23,7 +23,21 @@ YELLOW = (255, 255, 0)
 clicks = []
 circleCenter = (0,0)
 circleRad = 0
- 
+
+
+#make dClicks coordinates relative to cursor position, and K_TAB or a click stamps the image at the cursor coordinates,
+#keeping every "stamp" an entity that will react to the presence of "food".
+#   -collision polygon collision detection? (possibly neccessitating code refactor)
+#   -
+#
+#
+#
+#
+
+
+
+
+
 dClicks = [(71, 86), (40, 97), (41, 56), (69, 74), (122, 48), (161, 77), (124, 101)]
 dCircleCenter = (128, 67)
 dCircleRad = 7
