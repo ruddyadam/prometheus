@@ -76,6 +76,12 @@ while True:
                 print "circle radius: ", circleRad
                 """
                 #overwrites polygon coordinates to tuples.txt file, closes
+                f = open('tuples.txt', 'w')
+                f.write('a')
+                foo()
+                f.close()
+
+                
                 with open('tuples.txt', 'w') as f: #'a' to append
                     f.write(str(clicks).strip('[]'))
 
