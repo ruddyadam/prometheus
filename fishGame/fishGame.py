@@ -22,8 +22,6 @@ score
 import pygame, sys
 from pygame.locals import *
 
-
-
 screenSize = Rect(0,0,640,480)  #sets the screen size
 #screenSize = (640, 480)
 fpsClock = pygame.time.Clock()  #this is for syncing fps in the game.  currently unused
@@ -35,8 +33,6 @@ bg_image = 'aquarium.jpg'
 shark = 'shark.png'
 food = 'dsham.png'
 
-
-
 dClicks = [(71, 86), (40, 97), (41, 56), (69, 74), (122, 48), (161, 77), (124, 101)]
 dCircleCenter = (128, 67)
 dCircleRad = 7
@@ -47,22 +43,15 @@ dCircleRad = 7
 
 
 def main():  #the main?
-
     pygame.init()  #this initializes pygame
-    mousePos = pygame.mouse.get_pos()
-    
-
-    
 
     global background
     screen = pygame.display.set_mode((screenSize.size),0,32)  #this creates the screen
     pygame.display.set_caption('Ultimate Fish Game')#the title
-    
+
     
     background = pygame.image.load(bg_image).convert() #this prepares the jpg image
     mouse_cursor = pygame.image.load(food).convert_alpha() #this prepares the png image - 'alpha' for transparency
-    #mouse_cursor = pygame.image.load().convert()
-    foodSquare = pygame.draw.rect(background, (255,255,255), Rect((pygame.mouse.get_pos()), (5,5)))
     #pygame.mouse.set_visible(False) #this hides the mouse pointer
     
     #bg = screen.fill(BLUE)
@@ -72,18 +61,17 @@ def main():  #the main?
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-        
-        drawFish() #draws a fish in the upper left
+
+        drawFish() #draws a fish
                 
         screen.blit(background, (0,0))      #this keeps redrawing the background, so no trails on mouse_cursor image
-
-        mousePos = pygame.mouse.get_pos()
+        
         x,y = pygame.mouse.get_pos()        #gets the mouse position
         x -= mouse_cursor.get_width()/2     #these get the center of the mouse cursor image
         y -= mouse_cursor.get_height()/2    #these get the center of the mouse cursor image
 
-        #screen.blit(mouse_cursor,(x,y))     #redraws the mouse cursor image at x,y (cursor position)
-        screen.blit(foodSquare, mousePos)
+        screen.blit(mouse_cursor,(x,y))     #redraws the mouse cursor image at x,y (cursor position)
+        
         
 
 
@@ -97,16 +85,6 @@ def drawFish():
     background.lock()
     pygame.draw.circle(background,YELLOW,dCircleCenter,dCircleRad,0)
     background.unlock()
-
-def drawFood():
-    background.lock()
-    pygame.draw.rect(background, (255,255,255), Rect((pygame.mouse.get_pos()), (5,5)))
-    background.unlock()
-
-#topleftcorner will be cursor position offset so the cursor is in the center.
-#size will be 5x5
-
-
 
 
 """
