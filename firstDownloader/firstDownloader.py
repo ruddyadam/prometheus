@@ -14,22 +14,22 @@ do all of it
 import urllib
 import os
 import re
-from collections import OrderedDict
+#from collections import OrderedDict
 
-emotilist = ['sunship','adamantine','5Star','9mm','bash','BlueMagic','bullet',
-             'co2','essenceofdeath','gciknife','lol','mana','wtf','SRank','zz',
-             'eye','xxx','agathacross','ai_repair','snooze','question','lp3p',
-             'spark','lp33','AxeNSword','riddle','NZA2_Zed','NZA2_IronCross',
-             'repairpad','duel','PS2','abc','asterisk','bndage','99','ampersand',
-             'comic','airmech','betalord','alphahero','htt','hth','deadlyd',
-             'deadly0','deadly3','horseshoe','2','47','A','ai_fuel','arkham',
-             'Avengers','beer','choke','csgoa','csgob','csgox','dsfight','FF',
-             'fraud','gmod','glow','icon','ins','kudos','lcrown','lp3l','mmep_e',
-             'mmep_m','mmep_p','p2aperture','p2blue','p2orange','P','plex',
-             'power_main','riflesword','RogueMoneybags','shield_up','si',
-             'silverdollar','slender','spatula','sr4','TheD','tinycoin','twbuh',
-             'tyger','vectorcoin','vs','warband','wvwarning','XMen','xp','Y',
-             'zero','exclamation','dipaddle','codknife','twplus']
+emotilist = ['sunship', 'adamantine', '5Star', '9mm', 'bash', 'BlueMagic', 'bullet',
+             'co2', 'essenceofdeath', 'gciknife', 'lol', 'mana', 'wtf', 'SRank', 'zz',
+             'eye', 'xxx', 'agathacross', 'ai_repair', 'snooze', 'question', 'lp3p',
+             'spark', 'lp33', 'AxeNSword', 'riddle', 'NZA2_Zed', 'NZA2_IronCross',
+             'repairpad', 'duel', 'PS2', 'abc', 'asterisk', 'bndage', '99', 'ampersand',
+             'comic', 'airmech', 'betalord', 'alphahero', 'htt', 'hth', 'deadlyd',
+             'deadly0', 'deadly3', 'horseshoe', '2', '47', 'A', 'ai_fuel', 'arkham',
+             'Avengers', 'beer', 'choke', 'csgoa', 'csgob', 'csgox', 'dsfight', 'FF',
+             'fraud', 'gmod', 'glow', 'icon', 'ins', 'kudos', 'lcrown', 'lp3l', 'mmep_e',
+             'mmep_m', 'mmep_p', 'p2aperture', 'p2blue', 'p2orange', 'P', 'plex',
+             'power_main', 'riflesword', 'RogueMoneybags', 'shield_up', 'si',
+             'silverdollar', 'slender', 'spatula', 'sr4', 'TheD', 'tinycoin', 'twbuh',
+             'tyger', 'vectorcoin', 'vs', 'warband', 'wvwarning', 'XMen', 'xp', 'Y',
+             'zero', 'exclamation', 'dipaddle', 'codknife', 'twplus']
 username = ""
 directory = ""
 userURL = ""
@@ -37,16 +37,18 @@ choice = ""
 userColonList = []
 userList = []
 
+
 def setUsername():
-    "This sets the username, userURL variables and then runs the menu"
+    """This sets the username, userURL variables and then runs the menu"""
     global username
     global userURL
     username = raw_input('Steam Custom URL name -- profile MUST be public (type semijames): ')
     userURL = 'http://steamcommunity.com/id/' + username + '/inventory/json/753/6'
     print "\nCustom URL name set to", username
     print "\nCustom URL set to", userURL
-       
+
     menu()
+
 
 def menu():
     #print "menu begun...\n"
@@ -60,25 +62,32 @@ def menu():
     print "5) Print a list of emoticons I own that are usable by EmotiTyper"
     print "6) Print a list of the emoticons from teh Master List that I do not have"
     print "7) Change Custom URL\n"
-    
+
     print "8) Exit"
     global choice
     choice = raw_input("\nChoose (1-8): ")
     #print choice, type(choice)
     if str(choice) == "1":
         getImages(emotilist)
+        doMore()
     elif str(choice) == "2":
         getImages(emoticonNakedNameList())
+        doMore()
     elif str(choice) == "3":
         printColonEmoticonString()
+        doMore()
     elif str(choice) == "4":
         print emoticonNakedNameListOnly()
+        doMore()
     elif str(choice) == "5":
         compareLists()
+        doMore()
     elif str(choice) == "6":
         print dontHave()
+        doMore()
     elif str(choice) == "7":
         setUsername()
+        doMore()
     elif str(choice) == "8":
         print "Thank you for using (or not using) this utility."
     else:
@@ -86,35 +95,39 @@ def menu():
         menu()
     return choice
 
+
 def doMore():
     "This asks if the user wants to return to the Menu"
     #print "doMore begun...\n"
     print "\nWould you like to do more?"
-    do = raw_input("Y/n  " )
+    do = raw_input("Y/n  ")
     #print do, type(do)
-    if do in ['y','Y','yes','YES','Yes','']:
+    if do in ['y', 'Y', 'yes', 'YES', 'Yes', '']:
         menu()
     else:
         print "Ok, then. Bye."
+
 
 def chooseDirectory(choice):
     "This specifies the directory to download emoticons to based on user choice"
     #print "chooseDirectory begun...\n"
     #print "choice is " + choice
     if choice == "1":  #This needs to be fixed to work with any option that says "do everything"
-        directory = os.getcwd() + "\\firstDownloader_images_EmotiTyper\\"   #sets 'directory' variable to a subdirectory in the current working directory
+        directory = os.getcwd() + "\\firstDownloader_images_EmotiTyper\\"  #sets 'directory' variable to a subdirectory in the current working directory
     else:
         directory = os.getcwd() + "\\firstDownloader_images_" + username + "\\"
     print "directory chosen is " + directory
     return directory
-        
+
+
 def dupeCheck(seq):
     "This checks to see if there are any duplicate emoticon names in the results of scrapeEmotilist(), in the case of multiple copies of emoticons in the user inventory"
     #print "dupeCheck begun...\n"
     seen = set()
     seen_add = seen.add
-    theReturn = [ x for x in seq if x not in seen and not seen_add(x)]
+    theReturn = [x for x in seq if x not in seen and not seen_add(x)]
     return theReturn
+
 
 def scrapeEmotilist():
     "This will retrieve all names between, and including, '-:' and ':' on the userURL and return the results in a list"
@@ -126,14 +139,16 @@ def scrapeEmotilist():
     #print returnList
     return returnList
 
+
 def colonEmoticonList():
     "This returns a list of the results of scrapeEmotilist in :emoticon: format"
     #print "colonEmoticonList begun...\n"
     tempReturnList = []
     for n in scrapeEmotilist():
         tempReturnList.append(n.replace('-', ''))
-    return (dupeCheck(tempReturnList))   #returns a list in :emoticon: format
-    doMore()
+    return (dupeCheck(tempReturnList))  #returns a list in :emoticon: format
+
+
 
 def printColonEmoticonString():
     "This prints a string of the results of scrapeEmotilist in :emoticon: format"
@@ -142,7 +157,8 @@ def printColonEmoticonString():
     for n in scrapeEmotilist():
         tempReturnList.append(n.replace('-', ''))
     print ' '.join(dupeCheck(tempReturnList))
-    doMore()
+
+
 
 def emoticonNakedNameList():
     "This produces a list of the results from scrapeEmotilist()"
@@ -151,7 +167,8 @@ def emoticonNakedNameList():
     for n in scrapeEmotilist():
         tempReturnList.append(n.replace('-', '').replace(':', ''))
     #print dupeCheck(tempReturnList)
-    return dupeCheck(tempReturnList)    
+    return dupeCheck(tempReturnList)
+
 
 def emoticonNakedNameListOnly():
     "This does the same as emoticonNakedNameList, but also asks if the user wants to do more.  For when this is chosen as a menu option, and not called by another function."
@@ -160,7 +177,8 @@ def emoticonNakedNameListOnly():
     for n in scrapeEmotilist():
         tempReturnList.append(n.replace('-', '').replace(':', ''))
     return dupeCheck(tempReturnList)
-    doMore()
+
+
 
 def dontHave():
     "This does the same as emoticonNakedNameList, but also asks if the user wants to do more.  For when this is chosen as a menu option, and not called by another function."
@@ -169,18 +187,20 @@ def dontHave():
     for n in scrapeEmotilist():
         tempReturnList.append(n.replace('-', '').replace(':', ''))
     return dupeCheck(tempReturnList)
-    doMore()
-    
+
+
+
 def yourEmoticons():
     #print "yourEmoticons begun...\n"
     print "\nYour Emoticons: \n", scrapeEmotilist()
     if choice != '6':
         doMore()
 
+
 def emotiTyperEmoticons():
     #print "emotiTyperEmoticons begun...\n"
     print "\nValid EmotiTyper Emoticons You Own: \n", compareLists()
-    doMore()
+
 
 
 """
@@ -193,7 +213,7 @@ old non-def version:
 
 
 def getImages(myList):
-    "This retrieves images in emotilist from the Steam cdn and puts them in the target directory"
+    """This retrieves images in emotilist from the Steam cdn and puts them in the target directory"""
     #print "getImages begun...\n"
     directory = chooseDirectory(choice)
     if not os.path.exists(directory):
@@ -201,32 +221,35 @@ def getImages(myList):
 
     for n in myList:
         url = 'http://cdn.steamcommunity.com/economy/emoticon/' + n
-        urllib.urlretrieve(url, directory + n +".png")
-    
+        urllib.urlretrieve(url, directory + n + ".png")
+
     if len(emotilist) == len(scrapeEmotilist()):
         print "\nfirstDownloader_Images_" + username + " directory created, emoticon images in inventory of " + username + " downloaded."
     else:
         print "\nfirstDownloader_Images_EmotiTyper directory created, emoticon images downloaded."
-    doMore()
+
+
 
 def compareLists():
-    "This compares the return of emoticonNakedNameList() i.e. the user's emoticon list, with the masterlist, and creates a new list of emoticons that are common to both lists."
+    """This compares the return of emoticonNakedNameList() i.e. the user's emoticon list, with the masterlist,
+    and creates a new list of emoticons that are common to both lists."""
     global emotilist
     compareListReturn = []
-    nakedList = emoticonNakedNameList() #making an object from a function?
+    nakedList = emoticonNakedNameList()  # making an object from a function?
     #print "nakedList: ", nakedList
     for n in nakedList:
         if n in emotilist:
             compareListReturn.append(n)
     #print "\ncompareListreturn: ", compareListReturn
     print "\nYou own " + str(len(compareListReturn)) + "/" + str(len(emotilist)) + " emoticons usable by this program"
-    if raw_input("\nWould you like to see them?(Y/n)  ") in ['y','Y','yes','YES','Yes','']:
+    if raw_input("\nWould you like to see them?(Y/n)  ") in ['y', 'Y', 'yes', 'YES', 'Yes', '']:
         showMe = []
         for n in compareListReturn:
             newN = ':' + n + ':'
             showMe.append(newN)
         print "\n" + ' '.join(showMe) + "\n"
-    doMore()
+
+
 
 if __name__ == "__main__":
     setUsername()

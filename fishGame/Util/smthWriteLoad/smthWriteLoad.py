@@ -1,5 +1,7 @@
 #smthWriteLoad.py
 
+import re
+
 something = [(134, 39), (134, 56), (134, 87),
         (134, 118), (134, 80), (137, 71), (135, 96), (133, 113),
         (132, 130), (132, 145), (134, 148), (139, 111), (139, 99), (131, 77), (131, 53),
@@ -91,7 +93,10 @@ something = [(134, 39), (134, 56), (134, 87),
         (589, 374), (592, 373), (590, 373), (588, 373), (589, 370), (583, 370), (582, 371), (587, 364), (583, 367), (577, 364), (584, 363), (590, 363),
         (592, 370), (592, 364), (596, 371), (594, 380)]
 
-
+#regex to capture everything between '(' and ')',
+#smthParsed = re.findall('(.*?)', outputThis)
+#strip off the ( and )
+#decompile the strings into 
 
 
 def writeSmth(someTupleList): #someTupleList = something
@@ -103,15 +108,23 @@ def loadSmth(tupleTxt): #tupleTxt = smthWrite.txt
         # print smthLoad.read()
         outputThis = []
         tempLen = []
+        smthParsedFinal = []
         outputThis = smthLoad.read()
-        print outputThis
-        print "imported file is", type(outputThis)
-        for n in outputThis:
+        print "outputThis:\n", outputThis
+        print "outputThis is", type(outputThis)
+        print len(outputThis)
+        smthParsed = re.findall('\(.*?\)', outputThis)
+        for n in smthParsed:
+            smthParsedFinal.append(n.replace('\'', ''))
+        print "smthParsedFinal:\n", smthParsedFinal
+        print "smthParsedFinal is ", type(smthParsedFinal)
+        print len(smthParsedFinal)
+        for n in smthParsedFinal:
             if n in something:
                 tempLen.append(n)                   
 
-        print "list output to file initailly had", len(something), "items"
-        print "list writeen to, then read from has", len(tempLen), "items"
+        print "list output to file initially had", len(something), "items"
+        print "list written to, then read from has", len(tempLen), "of the same items"
 
 if __name__ == "__main__":
     writeSmth(something)

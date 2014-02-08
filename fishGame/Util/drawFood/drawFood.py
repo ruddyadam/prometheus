@@ -7,6 +7,7 @@ from pygame.locals import *
 import time
 
 pygame.init()
+pygame.mouse.set_visible(False) # hide mouse cursor
 
 screenRect = Rect(0,0,640,480)
 screen = pygame.display.set_mode((screenRect.size),0,32)
@@ -21,19 +22,19 @@ rectHei = 4
 rectWid = 4
 foodPosTuple = []
 
+def main():
 
-while True: #main game loop
-    pygame.mouse.set_visible(False)
-    global x,y
-    x,y = pygame.mouse.get_pos()
-    food = Rect(x-rectCentx,y-rectCenty,rectHei,rectWid)
+    while True: #main game loop
 
+        global x,y
+        x,y = pygame.mouse.get_pos()
+        food = Rect(x-rectCentx,y-rectCenty,rectHei,rectWid)
 
-    for event in pygame.event.get():
+        for event in pygame.event.get():
 
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
 
         if event.type == MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed() == (True,False,False):
