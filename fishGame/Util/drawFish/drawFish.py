@@ -8,6 +8,10 @@ Usage:
 -Tab: draw a default fish
 -Escape: clear the screen
 
+update: now Tab draws a fish at cursor position, with all body coordinates relative to it.
+
+
+
 """
 import pygame, sys
 from pygame.locals import *
@@ -24,13 +28,6 @@ FISH_YELLOW = (255, 255, 0)
 # make dClicks coordinates relative to cursor position, and K_TAB or a click stamps the image at the cursor coordinates,
 # keeping every "stamp" an entity that will react to the presence of "food".
 #    -collision polygon collision detection? (possibly necessitating code refactor)
-#    -
-#
-#
-#
-#
-
-
 
 
 dClicks = [(71, 86), (40, 97), (41, 56), (69, 74), (122, 48), (161, 77), (124, 101)]
@@ -39,7 +36,10 @@ dCircleRad = 7
 
 x1,x2,x3,y1,y2,y3 = 0,0,0,0,0,0
 
-def relDrawFish():
+def relDrawFish(): # draws a polygon fish relative to the cursor position, cursor pos is its "nose".
+    #this requires 'screen' var to be set, e.g.  screen = pygame.display.set_mode((640,480),0,32)
+
+
     #Nx = 161
     #Ny = 77
     #dNose = (Nx, Ny)
@@ -94,7 +94,10 @@ def main():
                     print "circleCenter: ", circleCenter
                     print "circle radius: ", circleRad
 
-                    """
+                if event.key == K_TAB: # draws a small fish using dClick, dCircleCenter, dCircleRad
+                    relDrawFish()
+
+                """
                     #overwrites polygon coordinates to tuples.txt file, closes
                     f = open('tuples.txt', 'w')
                     f.write('a')
@@ -111,7 +114,7 @@ def main():
                     c.clipboard_clear()
                     c.clipboard_append(str(clicks).strip('[]'))
                     c.destroy()
-                    """
+                """
                 """
                 if event.key == K_SPACE:
                     if clicks != [] or (circleRad != 0):
@@ -125,9 +128,6 @@ def main():
                         pygame.draw.circle(screen,YELLOW,dCircleCenter,dcircleRad,0)
                         screen.unlock()
                 """
-                if event.key == K_TAB: # draws a small fish using dClick, dCircleCenter, dCircleRad
-                    relDrawFish()
-
                 """
                 if event.key == K_TAB: # draws a small fish using dClick, dCircleCenter, dCircleRad
                     screen.lock()
@@ -164,8 +164,7 @@ def moveFish(coords, circleCen):
     for n in coords:
         n[0]
 """
+
+
 if __name__ == '__main__':
     main()
-
-
-

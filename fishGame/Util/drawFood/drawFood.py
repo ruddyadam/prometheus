@@ -16,8 +16,8 @@ color = (255,255,255)
 radius = (10)
 bg_image = 'aquarium.jpg'
 background = pygame.image.load(bg_image).convert()
-rectCentx = 1
-rectCenty = 1
+rectOffx = 1
+rectOffy = 1
 rectHei = 4
 rectWid = 4
 foodPosTuple = []
@@ -28,7 +28,7 @@ def main():
 
         global x,y
         x,y = pygame.mouse.get_pos()
-        food = Rect(x-rectCentx,y-rectCenty,rectHei,rectWid)
+        food = Rect(x-rectOffx,y-rectOffy,rectHei,rectWid)
 
         for event in pygame.event.get():
 
@@ -44,16 +44,16 @@ def main():
                 xFood,yFood = pygame.mouse.get_pos()
 
                 #global foodPosTuple #this is to be used to direct fish and to delete food when eaten.  and a surprise.
-                foodPosTuple.append((pygame.mouse.get_pos()[0]-rectCentx, pygame.mouse.get_pos()[1]-rectCenty)) #this creates a list of 'food' center pixel positions (x,y)
+                foodPosTuple.append((pygame.mouse.get_pos()[0]-rectOffx, pygame.mouse.get_pos()[1]-rectOffy)) #this creates a list of 'food' center pixel positions (x,y)
                 
                 print "foodPosTuple = ", foodPosTuple
 
                 
-                foodStamp = Rect(xFood-rectCentx,yFood-rectCenty,rectHei,rectWid)
+                foodStamp = Rect(xFood-rectOffx,yFood-rectOffy,rectHei,rectWid)
                 screen.lock()
                 pygame.draw.rect(background, color, foodStamp, 0)
                 screen.unlock()
-                print str(xFood-rectCentx) + ',' + str(yFood-rectCenty)
+                print str(xFood-rectOffx) + ',' + str(yFood-rectOffy)
 
         if event.type == KEYDOWN:
             if event.key == K_TAB:
