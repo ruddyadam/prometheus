@@ -113,18 +113,27 @@ def loadSmth(tupleTxt): #tupleTxt = smthWrite.txt
         print "outputThis:\n", outputThis
         print "outputThis is", type(outputThis)
         print len(outputThis)
-        smthParsed = re.findall('\(.*?\)', outputThis)
-        for n in smthParsed:
-            smthParsedFinal.append(n.replace('\'', ''))
+        # smthParsed = re.findall('\(.*?\)', outputThis)
+        # smthParsedFinal = [i.strip('()') for i in smthParsed] # LIST COMPREHENSION!  BOOYAH!
+        smthParsedFinal = [tuple(int(i) for i in a.strip('()[]').split(',')) for a in outputThis.split('), (')] # I totally stole this, and it worked
+        #The above split the string into a list at -> ), ( <-  and then stripped all the () and [], then made a tuple
+        #out of each string, splitting the string at -> , <-  into individual items, creating a list of tuples.
+
         print "smthParsedFinal:\n", smthParsedFinal
         print "smthParsedFinal is ", type(smthParsedFinal)
         print len(smthParsedFinal)
         for n in smthParsedFinal:
             if n in something:
-                tempLen.append(n)                   
+                tempLen.append(n)
 
-        print "list output to file initially had", len(something), "items"
-        print "list written to, then read from has", len(tempLen), "of the same items"
+        print "list which was output to file initially had...                       ", len(something), "tuples"
+        print "after being read in as a string then converted back to a list, it has", len(tempLen), "tuples"
+
+        return smthParsedFinal
+
+#def removeDupes():
+#    smthParsedND = [for n in smthParsedFinal if n in smthParsedFinal and not ]
+
 
 if __name__ == "__main__":
     writeSmth(something)

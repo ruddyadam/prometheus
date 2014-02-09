@@ -4,7 +4,7 @@
 
 import pygame, sys
 from pygame.locals import *
-import time
+#import time
 
 pygame.init()
 pygame.mouse.set_visible(False) # hide mouse cursor
@@ -166,3 +166,6 @@ def main():
         
 
     pygame.display.update()
+
+if __name__ == '__main__':
+    main()
