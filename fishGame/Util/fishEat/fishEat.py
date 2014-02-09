@@ -1,7 +1,7 @@
 # fishEat.py
 #this program will take resources from drawFish.py and drawFood.py and make them work together to make a fish eat food.
 
-#this fish will
+#fish and food need to be blittable objects.
 
 
 import pygame, sys
@@ -17,7 +17,7 @@ YELLOW = (255, 255, 0)
 
 
 
-def relDrawFish(): # draws a polygon fish relative to the cursor position, cursor pos is its "nose".
+def drawFish(): # draws a polygon fish relative to the cursor position, cursor pos is its "nose".
     #this requires 'screen' var to be set, e.g.  screen = pygame.display.set_mode((640,480),0,32)
 
 
@@ -26,7 +26,10 @@ def relDrawFish(): # draws a polygon fish relative to the cursor position, curso
     #dNose = (Nx, Ny)
     Nx,Ny = pygame.mouse.get_pos()
     # defClicks = [(Nx-n[0], Ny-n[1]) for n in dClicks]
-    defClicks = [(Nx-90, Ny+9), (Nx-121, Ny+20), (Nx-120, Ny-21), (Nx-92, Ny-3), (Nx-39, Ny-29), (Nx, Ny), (Nx-37, Ny+24)]
+    defClicks = [
+        (Nx-90, Ny+9), (Nx-121, Ny+20), (Nx-120, Ny-21),
+        (Nx-92, Ny-3), (Nx-39, Ny-29), (Nx, Ny),
+        (Nx-37, Ny+24)]
     defCircleCen = (Nx-33, Ny-10)
     defCircleRad = 7
 
@@ -48,27 +51,29 @@ def drawFood():
     rectWid = 4
     foodPosTuple = []
 
-        if pygame.mouse.get_pressed() == (True,False,False):
+    if pygame.mouse.get_pressed() == (True,False,False):
 
-            xFood,yFood = pygame.mouse.get_pos()
+        xFood,yFood = pygame.mouse.get_pos()
 
-            #global foodPosTuple #this is to be used to direct fish and to delete food when eaten.  and a surprise.
-            foodPosTuple.append((pygame.mouse.get_pos()[0]-rectOffx, pygame.mouse.get_pos()[1]-rectOffy)) #this creates a list of 'food' center pixel positions (x,y)
+        #global foodPosTuple #this is to be used to direct fish and to delete food when eaten.  and a surprise.
+        foodPosTuple.append((pygame.mouse.get_pos()[0]-rectOffx, pygame.mouse.get_pos()[1]-rectOffy)) #this creates a list of 'food' center pixel positions (x,y)
 
-            print "foodPosTuple = ", foodPosTuple
+        print "foodPosTuple = ", foodPosTuple
 
 
-            foodStamp = Rect(xFood-rectOffx,yFood-rectOffy,rectHei,rectWid)
-            screen.lock()
-            pygame.draw.rect(background, color, foodStamp, 0)
-            screen.unlock()
-            print str(xFood-rectOffx) + ',' + str(yFood-rectOffy)
+        foodStamp = Rect(xFood-rectOffx,yFood-rectOffy,rectHei,rectWid)
+        screen.lock()
+        pygame.draw.rect(background, color, foodStamp, 0)
+        screen.unlock()
+        print str(xFood-rectOffx) + ',' + str(yFood-rectOffy)
 
-def moveFish():
+#def moveFish():
 
 
 
 def main():
+
+    screen.blit(background, (0,0)) # background will not refresh, is outside of the loop
 
     while True: #main game loop
 
@@ -78,8 +83,15 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-            if event.key == MOUSEBUTTONDOWN:
+
+
+            if event.type == MOUSEBUTTONDOWN:
                 drawFood()
+
+            if event.type == KEYDOWN:
+                if event.key == K_TAB:
+                    drawFish()
+
 
         pygame.display.update()
 
