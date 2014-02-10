@@ -14,8 +14,8 @@ background = pygame.image.load(bg_image).convert()
 
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
-
-
+WHITE = (255, 255, 255)
+foodPosTuple = []
 
 def drawFish(): # draws a polygon fish relative to the cursor position, cursor pos is its "nose".
     #this requires 'screen' var to be set, e.g.  screen = pygame.display.set_mode((640,480),0,32)
@@ -49,23 +49,30 @@ def drawFood():
     rectOffy = 1
     rectHei = 4
     rectWid = 4
-    foodPosTuple = []
+
 
     if pygame.mouse.get_pressed() == (True,False,False):
 
         xFood,yFood = pygame.mouse.get_pos()
 
         #global foodPosTuple #this is to be used to direct fish and to delete food when eaten.  and a surprise.
-        foodPosTuple.append((pygame.mouse.get_pos()[0]-rectOffx, pygame.mouse.get_pos()[1]-rectOffy)) #this creates a list of 'food' center pixel positions (x,y)
+        foodPosTuple.append((xFood-rectOffx, yFood-rectOffy)) #this creates a list of 'food' center pixel positions (x,y)
 
         print "foodPosTuple = ", foodPosTuple
 
 
         foodStamp = Rect(xFood-rectOffx,yFood-rectOffy,rectHei,rectWid)
+        currFoodx = xFood-rectOffx
+        currFoody = yFood-rectOffy
+        food = pygame.draw.rect(background, WHITE, foodStamp, 0)
         screen.lock()
-        pygame.draw.rect(background, color, foodStamp, 0)
+        pygame.draw.rect(background, WHITE, foodStamp, 0)
         screen.unlock()
-        print str(xFood-rectOffx) + ',' + str(yFood-rectOffy)
+
+        print "last coordinate: ", str(xFood-rectOffx) +','+ str(yFood-rectOffy)
+        print type(food)
+        return food
+
 
 #def moveFish():
 
@@ -87,6 +94,7 @@ def main():
 
             if event.type == MOUSEBUTTONDOWN:
                 drawFood()
+                #screen.blit(drawFood(), (foodPosTuple))
 
             if event.type == KEYDOWN:
                 if event.key == K_TAB:
