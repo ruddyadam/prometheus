@@ -34,6 +34,11 @@ dClicks = [(71, 86), (40, 97), (41, 56), (69, 74), (122, 48), (161, 77), (124, 1
 dCircleCen = (128, 67)
 dCircleRad = 7
 
+clicks = []
+circleCenter = (0,0)
+circleRad = 0
+
+
 x1,x2,x3,y1,y2,y3 = 0,0,0,0,0,0
 
 def relDrawFish(): # draws a polygon fish relative to the cursor position, cursor pos is its "nose".
@@ -56,20 +61,21 @@ def relDrawFish(): # draws a polygon fish relative to the cursor position, curso
     pygame.draw.polygon(screen,bodyColor,defClicks,0)
     screen.unlock()
     screen.lock()
-    pygame.draw.circle(screen,eyeColor,defCircleCen,dCircleRad,0)
+    pygame.draw.circle(screen,eyeColor,defCircleCen,defCircleRad,0)
     screen.unlock()
 
 
 def main():
     while True:
+
         for event in pygame.event.get():
+
+            global clicks, circleCenter, circleRad
+
+
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-
-            clicks = []
-            circleCenter = (0,0)
-            circleRad = 0
 
             if event.type == pygame.MOUSEBUTTONDOWN: # ensures no dragging
                 if pygame.mouse.get_pressed() == (True, False, False): # if left click
@@ -84,12 +90,12 @@ def main():
                           
                 
             if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+                if event.key == K_ESCAPE:  #THIS WILL CLEAR THE SCREEN
                     clicks = [] # erases polygon
                     circleRad = 0 # erases circle(s)
                     screen.fill((0,0,0)) # fills the screen with black
             
-                if event.key == K_RETURN:
+                if event.key == K_RETURN:  #THIS WILL OUTPUT THE POLYGON AND CIRCLE COORDINATES TO CONSOLE
                     print "polygon coordinates: ", clicks  # prints to console/shell
                     print "circleCenter: ", circleCenter
                     print "circle radius: ", circleRad
