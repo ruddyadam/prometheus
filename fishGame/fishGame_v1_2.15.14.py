@@ -4,7 +4,7 @@ Python 2.7.6
 
 user is presented with a window with an underwater background.
 use right click to spawn a fish at cursor, left click to spawn food at cursor.
-fish swims to food and eats it, then moves to the next food in drop order.
+fish swims to food and eats it, moving on to the next food in drop order.
 if there is no food, the fish stops.
 """
 
@@ -37,7 +37,7 @@ def main(): #the main function
     fish_positions = [] # a list of 2-lists containing x,y coordinates of the 'nose' of the fish
 
     fps_clock = pygame.time.Clock()  #this is for syncing fps in the game.
-    fps = 100 # maximum frames per second (main loops per 1000 milliseconds
+    fps = 100 # maximum frames per second (main loops per 1000 ms
     fish_move_distance = 1 # in pixels
 
     screen = pygame.display.set_mode((screenRect.size),0,32) # this creates the screen
@@ -67,7 +67,6 @@ def main(): #the main function
                     #print "food_positions = ", food_positions
 
             if event.type == KEYDOWN:
-
                 if event.key == K_ESCAPE:  #THIS WILL CLEAR THE SCREEN
                     food_positions = [] # erases food
                     fish_positions = [] # erases fish
@@ -81,7 +80,7 @@ def main(): #the main function
                 if event.key == K_3:
                     fps = 100
 
-                #testing if F4 works for fish creation
+                #testing to see if f4 works for fish creation
                 if event.key == K_F4:
                     a, b = pygame.mouse.get_pos()
                     fish_positions.append([a, b])
@@ -93,42 +92,11 @@ def main(): #the main function
         draw_foods(food_positions)
         move_fishes_towards_food(fish_positions, food_positions, fish_move_distance)
         #first_food_compare_and_remove_from_list(food_positions, fish_positions)
-        #food_positions = any_food_compare_and_remove_from_list(food_positions, fish_positions)
-        food_positions = get_that_corn_outta_my_face(food_positions, fish_positions)
+        any_food_compare_and_remove_from_list(food_positions, fish_positions)
         fps_clock.tick(fps)
 
         # screen.blit(mouse_cursor,(x,y))     #redraws the mouse cursor image at x,y (cursor position)
         pygame.display.update()  #not sure what this does
-
-"""
-def get_closest_food(fish_positions, food_positions):
-    """
-"""
-    for each fish, finds out which food is closest.
-
-    @param fish_positions
-    a list of 2-lists which represent x,y coordinates of the fishes
-
-    @param food_positions
-    a list of 2-lists which represent x, y coordinates of the food
-
-    @return
-    an int 2-list from food_positions
-    """
-"""
-    result = []
-    iterate each fish x,y over each food x,y,
-    calculate the closest food to the fish
-    append the closest food to result
-    for fish_position in fish_positions:
-        fish_x_coordinate = fish_position[0]
-        fish_y_coordinate = fish_position[1]
-        for food_position in food_positions:
-            food_x_coordinate = food_position[0]
-            food_y_coordinate = food_position[1]
-
-    return result
-"""
 
 def lower_fps(my_fps):
     """
@@ -216,31 +184,10 @@ def first_food_compare_and_remove_from_list(food_positions, fish_positions):
 
     @param food_positions
     a list of 2-lists which represent x, y coordinates of the food
-
-    @return
-    a list of 2-lists which represent x, y coordinates of the food
     """
-    not_eaten_food = []
     if len(food_positions) > 0 and len(fish_positions) > 0:
         if food_positions[0] in fish_positions:
-            not_eaten_food.append(food_positions[1:])
-        return not_eaten_food
-    else:
-        return food_positions
-
-def get_that_corn_outta_my_face(face, esquelitos_hands):
-    it_got_slapped_out_of_his_hands_by_me_cause_it_was_in_my_face = []
-    release_release = True
-    two_consecutive_but_ineffective_kicks_to_the_wall = True
-    if len(face) > 0 and len(esquelitos_hands) > 0:
-        for corn in face:
-            if corn not in esquelitos_hands:
-                it_got_slapped_out_of_his_hands_by_me_cause_it_was_in_my_face.append(corn)
-        return it_got_slapped_out_of_his_hands_by_me_cause_it_was_in_my_face
-    else:
-        if release_release:
-            if two_consecutive_but_ineffective_kicks_to_the_wall:
-                return face
+            food_positions.remove(food_positions[0])
 
 def any_food_compare_and_remove_from_list(food_positions, fish_positions):
     """
@@ -251,18 +198,11 @@ def any_food_compare_and_remove_from_list(food_positions, fish_positions):
 
     @param food_positions
     a list of 2-lists which represent x, y coordinates of the food
-
-    @return
-    a list of 2-lists which represent x, y coordinates of the food
     """
-    not_eaten_food = []
     if len(food_positions) > 0 and len(fish_positions) > 0:
         for food_position in food_positions:
-            if food_position not in fish_positions:
-                not_eaten_food.append(food_position)
-        return not_eaten_food
-    else:
-        return food_positions
+            if food_position in fish_positions:
+                food_positions.remove(food_position)
 
 def move_fishes_towards_food(fish_positions, food_positions, fish_move_distance):
     """
