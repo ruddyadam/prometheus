@@ -6,19 +6,11 @@ from pygame.locals import *
 screenRect = Rect(0,0,640,480)  #sets the screen size
 #screenSize = (640, 480)
 
-fps_clock = pygame.time.Clock()  #this is for syncing fps in the game.
-fps = 200 # maximum frames per second (main loops per 1000 microseconds)
-fish_move_distance = 1 # in pixels
-
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 VIOLET = (208, 32, 144)
 WHITE = (255, 255, 255)
 bg_image = 'aquarium.jpg'
-
-#todo: make the fish move less fast, but do not reduce FPS, or some clicks will not register.
-#todo: set up a counter in the fish loop, that the fish will only move after each fish's position is re-updated 10 times.
-#todo: this will make each fish 10x slower by design, without reducing the fps (amount of main loops per second)
 
 def main(): #the main function
     pygame.init()  #this initializes pygame
@@ -28,8 +20,12 @@ def main(): #the main function
     #global food_positions and fish_positions are needed for the 'Escape' key to work.
     food_positions = [] # a list of tuples containing x,y coordinates of 'food'
     fish_positions = [] # a list of tuples containing x,y coordinates of the 'nose' of the fish
+    fps_clock = pygame.time.Clock()  #this is for syncing fps in the game.
+    fps = 100 # maximum frames per second (main loops per 1000 microseconds)
+    fish_move_distance = 1 # in pixels
+
     screen = pygame.display.set_mode((screenRect.size),0,32) # this creates the screen
-    pygame.display.set_caption('Ultimate Fish Game:             Right Click : FISH  |  Left Click : FOOD  |  Escape : CLEAR') # the title
+    pygame.display.set_caption('~~Ultimate Fish Game~~ Right Click: FISH | Left Click: FOOD | Escape: CLEAR | SPEED: 1+ / 2- / 3= ') # the title
 
     background = pygame.image.load(bg_image).convert() #this prepares the jpg image
 
@@ -55,16 +51,58 @@ def main(): #the main function
                     food_positions = [] # erases food
                     fish_positions = [] # erases fish
 
+                if event.key == K_1:
+                    fps = lower_fps(fps)
+
+                if event.key == K_2:
+                    fps = raise_fps(fps)
+
+                if event.key == K_3:
+                    fps = 100
+
         #screen.fill((0,0,0)) # clears screen/ fills the screen with black
         screen.blit(background, (0,0))      #this keeps redrawing the background
         draw_fishes(fish_positions) # draw fish based on right click
         draw_foods(food_positions) # draw food based on left click
-        move_fishes_towards_food(fish_positions, food_positions)
+        move_fishes_towards_food(fish_positions, food_positions, fish_move_distance)
+        #first_food_compare_and_remove_from_list(food_positions, fish_positions)
+        any_food_compare_and_remove_from_list(food_positions, fish_positions)
         fps_clock.tick(fps)
 
         # screen.blit(mouse_cursor,(x,y))     #redraws the mouse cursor image at x,y (cursor position)
         pygame.display.update()  #not sure what this does
 
+def lower_fps(my_fps):
+    """
+    decreases the fps, decreasing the speed of the fish
+
+    @param my_fps
+    int variable
+
+    @return
+    int variable
+    """
+    if my_fps > 49:
+        my_fps -= 10
+        return my_fps
+    else:
+        return my_fps
+
+def raise_fps(my_fps):
+    """
+    increases the fps, increasing the speed of the fish
+
+    @param my_fps
+    int variable
+
+    @return
+    int variable
+    """
+    if my_fps < 1001:
+        my_fps += 10
+        return my_fps
+    else:
+        return my_fps
 
 def draw_fishes(fish_positions):
     """
@@ -111,13 +149,36 @@ def draw_foods(food_positions):
         pygame.draw.rect(screen, WHITE, food_square, 0)
         screen.unlock()
 
-def remove_first_food_from_list(food_positions):
-    food_positions = food_positions[1:]
-    return food_positions
+def first_food_compare_and_remove_from_list(food_positions, fish_positions):
+    """
+    removes the first food in the food_positions list from the board if it matches a fish's position
 
+    @param fish_positions
+    a list of 2-lists which represent x,y coordinates of the fishes
 
+    @param food_positions
+    a list of 2-lists which represent x, y coordinates of the food
+    """
+    if len(food_positions) > 0 and len(fish_positions) > 0:
+        if food_positions[0] in fish_positions:
+            food_positions.remove(food_positions[0])
 
-def move_fishes_towards_food(fish_positions, food_positions):
+def any_food_compare_and_remove_from_list(food_positions, fish_positions):
+    """
+    removes food from the board if it matches a fish's position
+
+    @param fish_positions
+    a list of 2-lists which represent x,y coordinates of the fishes
+
+    @param food_positions
+    a list of 2-lists which represent x, y coordinates of the food
+    """
+    if len(food_positions) > 0 and len(fish_positions) > 0:
+        for food_position in food_positions:
+            if food_position in fish_positions:
+                food_positions.remove(food_position)
+
+def move_fishes_towards_food(fish_positions, food_positions, fish_move_distance):
     """
     Moves each fish towards the food.
 
@@ -131,6 +192,8 @@ def move_fishes_towards_food(fish_positions, food_positions):
     a list of 2-lists which represent x, y coordinates of the food
     """
     # if there are things in food_positions, then there is food on the screen
+    #todo: have each fish check which food is closest to them, and make them go to that food.
+    #todo: if it gets stuck, move it 2 pixels in a direction towards any of the closest food to 'unstick' it.
     if len(food_positions) > 0:
         current_food_position = food_positions[0]
         for fish_position in fish_positions:
@@ -152,8 +215,8 @@ def move_fishes_towards_food(fish_positions, food_positions):
             else:
                 for axis in fish_position:
                     fish_position[fish_position.index(axis)] = current_food_position[fish_position.index(axis)]
-                #todo: error on 156. occurs: 2+ fish, when food is supposed to be removed. crashes when fish nose == food coordinate
-                food_positions.remove(current_food_position)
+                    #todo: error on 156. occurs: 2+ fish, when food is supposed to be removed. crashes when fish nose == food coordinate
+                #food_positions.remove(current_food_position)
 
 
                 #food_positions = remove_first_food_from_list(food_positions)
@@ -162,7 +225,6 @@ def move_fishes_towards_food(fish_positions, food_positions):
                     # removes that food coordinate from the food_positions
                     # this will be for any fish whose position is <= fish_move_distance pixels away.
                     # if any fish is within fish_move_distance pixels of the food, that fish's nose coordinate will match the food coordinate
-
 
 def test():
     """
@@ -176,13 +238,12 @@ def test():
     """
 
     fishes = [[100,101]] # fish_positions
-    foods = [[200,201]]  #food#positions
+    foods = [[200,201]]  #food_positions
 
     move_fishes_towards_food(fishes, foods)
 
     print "\nresult: fish_positions = ", fishes # [[110,111]]
     print "result: food_positions = ", foods   # [[200,201]]
-
 
 if __name__ == '__main__': #this allows import of this without automatic code execution
     main()
