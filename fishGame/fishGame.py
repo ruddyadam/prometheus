@@ -16,15 +16,17 @@ if there is no food, the fish stops.
 
 import pygame, sys
 from pygame.locals import *
+import random
 
 screenRect = Rect(0,0,640,480)  #sets the screen size
 #screenSize = (640, 480)
 
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
-VIOLET = (208, 32, 144)
 WHITE = (255, 255, 255)
 bg_image = 'aquarium.jpg'
+body_range = [-5,5,1] #number of pixels variation to draw the body
+random_range = 4 #number of pixels variation to draw fish eye
 
 def main(): #the main function
     #!/usr/bin/python2
@@ -35,6 +37,10 @@ def main(): #the main function
 
     food_positions = [] # a list of 2-lists containing x,y coordinates of 'food'
     fish_positions = [] # a list of 2-lists containing x,y coordinates of the 'nose' of the fish
+    fish_waypoints = []
+    body_range = (-10,10) #number of pixels variation to draw the fish body
+    eye_range = (-3,3) #number of pixels variation to draw the fish eye
+
 
     fps_clock = pygame.time.Clock()  #this is for syncing fps in the game.
     fps = 100 # maximum frames per second (main loops per 1000 milliseconds
@@ -64,7 +70,7 @@ def main(): #the main function
                 if pygame.mouse.get_pressed() == (True,False,False):
                     c, d = pygame.mouse.get_pos()
                     food_positions.append([c, d])
-                    #print "food_positions = ", food_positions
+                    print "food_positions = ", food_positions
 
             if event.type == KEYDOWN:
 
@@ -87,9 +93,13 @@ def main(): #the main function
                     fish_positions.append([a, b])
                     #print "fish_positions = ", fish_positions
 
+                if event.key == K_F7:
+                    e, f = pygame.mouse.get_pos()
+                    fish_waypoints.append([e, f])
+
         #screen.fill((0,0,0)) # clears screen/ fills the screen with black
         screen.blit(background, (0,0))
-        draw_fishes(fish_positions)
+        draw_fishes(fish_positions, body_range, eye_range)
         draw_foods(food_positions)
         move_fishes_towards_food(fish_positions, food_positions, fish_move_distance)
         #first_food_compare_and_remove_from_list(food_positions, fish_positions)
@@ -162,28 +172,37 @@ def raise_fps(my_fps):
     else:
         return my_fps
 
-def draw_fishes(fish_positions):
+def draw_fishes(fish_positions, body_range, eye_range):
     """
     draws every fish, using fish_positions locations
 
     @param fish_positions
     a list of 2-lists which represent x,y coordinates of the fishes
+
+    @param body_range
+    a 2-tuple in intergers
+
+    @param eye_range
+    a 2-tuple of intergers
     """
 
     for body_coordinate in fish_positions: # n[0] = x, n[1] = y coordinates
 
+        fish_body_range = random.randint(body_range[0], body_range[1])
+        fish_eye_range =  random.randint(eye_range[0], eye_range[1])
+
         fish_body_coordinates_relative_to_nose = [
-            (body_coordinate[0]-90,  body_coordinate[1]+9),
-            (body_coordinate[0]-121, body_coordinate[1]+20),
-            (body_coordinate[0]-120, body_coordinate[1]-21),
-            (body_coordinate[0]-92,  body_coordinate[1]-3),
-            (body_coordinate[0]-39,  body_coordinate[1]-29),
-            (body_coordinate[0],     body_coordinate[1]),
-            (body_coordinate[0]-37,  body_coordinate[1]+24)
+            (body_coordinate[0]-90 + fish_body_range,  body_coordinate[1]+9 + fish_body_range),
+            (body_coordinate[0]-121 + fish_body_range, body_coordinate[1]+20 + fish_body_range),
+            (body_coordinate[0]-120 + fish_body_range, body_coordinate[1]-21 + fish_body_range),
+            (body_coordinate[0]-92 + fish_body_range,  body_coordinate[1]-3 + fish_body_range),
+            (body_coordinate[0]-39 + fish_body_range,  body_coordinate[1]-29 + fish_body_range),
+            (body_coordinate[0],                       body_coordinate[1]), #nose, no variation
+            (body_coordinate[0]-37 + fish_body_range,  body_coordinate[1]+24 + fish_body_range)
         ]
 
-        fish_eye_centerpoint = (body_coordinate[0]-33, body_coordinate[1]-10)
-        fish_eye_radius = 7
+        fish_eye_centerpoint = (body_coordinate[0]-33 + fish_eye_range, body_coordinate[1]-10 + fish_eye_range)
+        fish_eye_radius = 7 + fish_eye_range
 
         screen.lock()
         # draws fish body
@@ -264,6 +283,15 @@ def any_food_compare_and_remove_from_list(food_positions, fish_positions):
     else:
         return food_positions
 
+def follow_fish_waypoints(fish_waypoints):
+    """
+    this makes the fish follow the fish waypoints before getting the food.
+
+    @param fish_waypoints
+    a list of 2-lists which represent x, y coordinates
+    """
+    pass
+
 def move_fishes_towards_food(fish_positions, food_positions, fish_move_distance):
     """
     Moves each fish towards the food.
@@ -280,6 +308,7 @@ def move_fishes_towards_food(fish_positions, food_positions, fish_move_distance)
     # if there are things in food_positions, then there is food on the screen
     #todo: have each fish check which food is closest to them, and make them go to that food.
     #todo: if it gets stuck, move it 2 pixels in a direction towards any of the closest food to 'unstick' it.
+    #follow_fish_waypoints()
     if len(food_positions) > 0:
         #todo: value for current_food_position needs to change to be more
         current_food_position = food_positions[0]
