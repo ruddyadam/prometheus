@@ -25,8 +25,8 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 WHITE = (255, 255, 255)
 bg_image = 'aquarium.jpg'
-body_range = [-5,5,1] #number of pixels variation to draw the body
-random_range = 4 #number of pixels variation to draw fish eye
+#body_range = [-5,5,1] #number of pixels variation to draw the body
+#random_range = 4 #number of pixels variation to draw fish eye
 
 def main(): #the main function
     #!/usr/bin/python2
@@ -38,9 +38,9 @@ def main(): #the main function
     food_positions = [] # a list of 2-lists containing x,y coordinates of 'food'
     fish_positions = [] # a list of 2-lists containing x,y coordinates of the 'nose' of the fish
     fish_waypoints = []
-    body_range = (-10,10) #number of pixels variation to draw the fish body
-    eye_range = (-3,3) #number of pixels variation to draw the fish eye
-
+    body_range = (-15,15) #number of pixels variation to draw the fish body
+    eye_range = (-5,5) #number of pixels variation to draw the fish eye
+    fish_variation_randints = [] #a list of 14-lists, each item of which will provide variation for each fish body coordinate
 
     fps_clock = pygame.time.Clock()  #this is for syncing fps in the game.
     fps = 100 # maximum frames per second (main loops per 1000 milliseconds
@@ -62,6 +62,8 @@ def main(): #the main function
 
                 # if right click
                 if pygame.mouse.get_pressed() == (False, False, True):
+                    fish_variation_randints.append(get_randints_for_fish_variation(body_range, eye_range))
+                    #print fish_variation_randints
                     a, b = pygame.mouse.get_pos()
                     fish_positions.append([a, b])
                     #print "fish_positions = ", fish_positions
@@ -99,7 +101,7 @@ def main(): #the main function
 
         #screen.fill((0,0,0)) # clears screen/ fills the screen with black
         screen.blit(background, (0,0))
-        draw_fishes(fish_positions, body_range, eye_range)
+        draw_fishes(fish_positions, fish_variation_randints)
         draw_foods(food_positions)
         move_fishes_towards_food(fish_positions, food_positions, fish_move_distance)
         #first_food_compare_and_remove_from_list(food_positions, fish_positions)
@@ -172,37 +174,53 @@ def raise_fps(my_fps):
     else:
         return my_fps
 
-def draw_fishes(fish_positions, body_range, eye_range):
+def get_randints_for_fish_variation(body_range, eye_range):
+    """
+    appends a 12-list of random digits within another list.
+
+    @param body_range
+    a 2-tuple of intergers
+
+    @param eye_range
+    a 2-tuple of intergers
+
+    @return
+    a 12-list
+    """
+    temporary_random_int_list = []
+    for fish_variation_number_for_body in range(1,13):
+        temporary_random_int_list.append(random.randint(body_range[0], body_range[1]))
+    for fish_variation_number_for_eye in range(1,4):
+        temporary_random_int_list.append(random.randint(eye_range[0], eye_range[1]))
+    #print temporary_int_list
+    return temporary_random_int_list
+
+def draw_fishes(fish_positions, fish_variation_randints):
     """
     draws every fish, using fish_positions locations
 
     @param fish_positions
     a list of 2-lists which represent x,y coordinates of the fishes
 
-    @param body_range
-    a 2-tuple in intergers
-
-    @param eye_range
-    a 2-tuple of intergers
+    @param fish_variations_randints
+    a list of 14-lists
     """
 
     for body_coordinate in fish_positions: # n[0] = x, n[1] = y coordinates
 
-        fish_body_range = random.randint(body_range[0], body_range[1])
-        fish_eye_range =  random.randint(eye_range[0], eye_range[1])
+        variation = fish_variation_randints[fish_positions.index(body_coordinate)]
 
         fish_body_coordinates_relative_to_nose = [
-            (body_coordinate[0]-90 + fish_body_range,  body_coordinate[1]+9 + fish_body_range),
-            (body_coordinate[0]-121 + fish_body_range, body_coordinate[1]+20 + fish_body_range),
-            (body_coordinate[0]-120 + fish_body_range, body_coordinate[1]-21 + fish_body_range),
-            (body_coordinate[0]-92 + fish_body_range,  body_coordinate[1]-3 + fish_body_range),
-            (body_coordinate[0]-39 + fish_body_range,  body_coordinate[1]-29 + fish_body_range),
+            (body_coordinate[0]-90 + variation[0],  body_coordinate[1]+9 + variation[1]),
+            (body_coordinate[0]-121 + variation[2], body_coordinate[1]+20 + variation[3]),
+            (body_coordinate[0]-120 + variation[4], body_coordinate[1]-21 + variation[5]),
+            (body_coordinate[0]-92 + variation[6],  body_coordinate[1]-3 + variation[7]),
+            (body_coordinate[0]-39 + variation[8],  body_coordinate[1]-29 + variation[9]),
             (body_coordinate[0],                       body_coordinate[1]), #nose, no variation
-            (body_coordinate[0]-37 + fish_body_range,  body_coordinate[1]+24 + fish_body_range)
-        ]
-
-        fish_eye_centerpoint = (body_coordinate[0]-33 + fish_eye_range, body_coordinate[1]-10 + fish_eye_range)
-        fish_eye_radius = 7 + fish_eye_range
+            (body_coordinate[0]-37 + variation[10],  body_coordinate[1]+24 + variation[11])
+            ]
+        fish_eye_centerpoint = (body_coordinate[0]-33 + variation[12], body_coordinate[1]-10 + variation[13])
+        fish_eye_radius = 7 + variation[14]
 
         screen.lock()
         # draws fish body
@@ -247,19 +265,19 @@ def first_food_compare_and_remove_from_list(food_positions, fish_positions):
     else:
         return food_positions
 
-def get_that_corn_outta_my_face(face, esquelitos_hands):
+def get_that_corn_outta_my_face(mah_face, esquelitos_hands):
     it_got_slapped_out_of_his_hands_by_me_cause_it_was_in_my_face = []
     release_release = True
     two_consecutive_but_ineffective_kicks_to_the_wall = True
-    if len(face) > 0 and len(esquelitos_hands) > 0:
-        for corn in face:
+    if len(mah_face) > 0 and len(esquelitos_hands) > 0:
+        for corn in mah_face:
             if corn not in esquelitos_hands:
                 it_got_slapped_out_of_his_hands_by_me_cause_it_was_in_my_face.append(corn)
         return it_got_slapped_out_of_his_hands_by_me_cause_it_was_in_my_face
     else:
         if release_release:
             if two_consecutive_but_ineffective_kicks_to_the_wall:
-                return face
+                return mah_face
 
 def any_food_compare_and_remove_from_list(food_positions, fish_positions):
     """
@@ -310,7 +328,7 @@ def move_fishes_towards_food(fish_positions, food_positions, fish_move_distance)
     #todo: if it gets stuck, move it 2 pixels in a direction towards any of the closest food to 'unstick' it.
     #follow_fish_waypoints()
     if len(food_positions) > 0:
-        #todo: value for current_food_position needs to change to be more
+        #todo: value for current_food_position needs to change to account for more than just the first position
         current_food_position = food_positions[0]
         for fish_position in fish_positions:
             food_x_distance_from_fish = abs(fish_position[0] - current_food_position[0])
