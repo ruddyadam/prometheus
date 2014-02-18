@@ -128,48 +128,6 @@ def main(): #the main function
         # screen.blit(mouse_cursor,(x,y))     #redraws the mouse cursor image at x,y (cursor position)
         pygame.display.update()  #not sure what this does
 
-"""
-def get_closest_food(fish_positions, food_positions):
-
-    for each fish, finds out which food is closest.
-
-    @param fish_positions
-    a list of 2-lists which represent x,y coordinates of the fishes
-
-    @param food_positions
-    a list of 2-lists which represent x, y coordinates of the food
-
-    @return
-    an int 2-list from food_positions
-
-
-    result = []
-    iterate each fish x,y over each food x,y,
-    calculate the closest food to the fish
-    append the closest food to result
-    for fish_position in fish_positions:
-        fish_x_coordinate = fish_position[0]
-        fish_y_coordinate = fish_position[1]
-        for food_position in food_positions:
-            food_x_coordinate = food_position[0]
-            food_y_coordinate = food_position[1]
-
-    return result
-
-1. iterate fish_posiotion in fish_positions over food_positions
-2. for 'closest_food(fish_positions, food_positions)
-3.
-
-
-
-path-to-fish is an else, make normal path the default in a switch/case??  pressing a buttin changes a variable that the fish_path function uses to switch cases.
-
-
-
-
-
-"""
-
 def lower_fps(my_fps):
     """
     decreases the fps, decreasing the speed of the fish
@@ -440,12 +398,6 @@ def move_fishes_towards_food(fish_positions, food_positions, fish_move_distance,
 def test():
     """
     this test moves the fish coordinates toward the food one step (10 pixels).
-
-    @param food_positions
-    a list of 2-lists which represent x, y coordinates of the food
-
-    @param fish_positions
-    a list of 2-lists which represent x,y coordinates of the fishes
     """
 
     fishes = [[100,101]] # fish_positions
@@ -603,5 +555,45 @@ score
     -another number shows how many food bits were eaten
 
 """
+"""
+def get_closest_food(fish_positions, food_positions):
 
+    for each fish, finds out which food is closest.
+
+    @param fish_positions
+    a list of 2-lists which represent x,y coordinates of the fishes
+
+    @param food_positions
+    a list of 2-lists which represent x, y coordinates of the food
+
+    @return
+    an int 2-list from food_positions
+
+
+    result = []
+    iterate each fish x,y over each food x,y,
+    calculate the closest food to the fish
+    append the closest food to result
+    for fish_position in fish_positions:
+        fish_x_coordinate = fish_position[0]
+        fish_y_coordinate = fish_position[1]
+        for food_position in food_positions:
+            food_x_coordinate = food_position[0]
+            food_y_coordinate = food_position[1]
+
+    return result
+
+1. iterate fish_posiotion in fish_positions over food_positions
+2. for 'closest_food(fish_positions, food_positions)
+3.
+
+
+
+path-to-fish is an else, make normal path the default in a switch/case??  pressing a buttin changes a variable that the fish_path function uses to switch cases.
+
+
+
+
+
+"""
 
