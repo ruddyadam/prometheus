@@ -39,8 +39,6 @@ def main():
         if event.type == MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed() == (True,False,False):
                 
-                (pygame.mouse.get_pos())
-                
                 xFood,yFood = pygame.mouse.get_pos()
 
                 #global foodPosTuple #this is to be used to direct fish and to delete food when eaten.  and a surprise.
@@ -48,7 +46,6 @@ def main():
                 
                 print "foodPosTuple = ", foodPosTuple
 
-                
                 foodStamp = Rect(xFood-rectOffx,yFood-rectOffy,rectHei,rectWid)
                 screen.lock()
                 pygame.draw.rect(background, color, foodStamp, 0)

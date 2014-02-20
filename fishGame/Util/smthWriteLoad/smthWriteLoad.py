@@ -2,6 +2,8 @@
 
 import re
 
+file = 'smthWrite.txt'
+
 something = [(134, 39), (134, 56), (134, 87),
         (134, 118), (134, 80), (137, 71), (135, 96), (133, 113),
         (132, 130), (132, 145), (134, 148), (139, 111), (139, 99), (131, 77), (131, 53),
@@ -99,43 +101,49 @@ something = [(134, 39), (134, 56), (134, 87),
 #decompile the strings into 
 
 
-def writeSmth(someTupleList): #someTupleList = something
-    with open('smthWrite.txt', 'w') as smthWrite: #'a' to append, 'w' to overwrite
-        smthWrite.write(str(someTupleList)) #.strip('[]'))
+def write_smth(some_tuple_list): #someTupleList = something
+    with open(file, 'w') as smth_write: #'a' to append, 'w' to overwrite
+        smth_write.write(str(some_tuple_list)) #.strip('[]'))
 
-def loadSmth(tupleTxt): #tupleTxt = smthWrite.txt
-    with open(tupleTxt, 'r') as smthLoad:
+def load_smth(tuple_txt): #tupleTxt = smthWrite.txt
+    with open(tuple_txt, 'r') as smth_load:
         # print smthLoad.read()
         outputThis = []
-        tempLen = []
-        smthParsedFinal = []
-        outputThis = smthLoad.read()
-        print "outputThis:\n", outputThis
-        print "outputThis is", type(outputThis)
-        print len(outputThis)
+        temp_len = []
+        outputThis = smth_load.read()
+        #print "outputThis:\n", outputThis
+        #print "outputThis is", type(outputThis)
+        #print len(outputThis)
         # smthParsed = re.findall('\(.*?\)', outputThis)
         # smthParsedFinal = [i.strip('()') for i in smthParsed] # LIST COMPREHENSION!  BOOYAH!
-        smthParsedFinal = [tuple(int(i) for i in a.strip('()[]').split(',')) for a in outputThis.split('), (')] # I totally stole this, and it worked
+        smth_parsed_final = [tuple(int(i) for i in a.strip('()[]').split(',')) for a in outputThis.split('), (')] # I totally stole this, and it worked
         #The above split the string into a list at -> ), ( <-  and then stripped all the () and [], then made a tuple
         #out of each string, splitting the string at -> , <-  into individual items, creating a list of tuples.
+        list_of_lists_smth_parsed_final = []
+        for n in smth_parsed_final:
+            temp_list = []
+            for i in n:
+                temp_list.append(i)
+            list_of_lists_smth_parsed_final.append(temp_list)
 
-        print "smthParsedFinal:\n", smthParsedFinal
-        print "smthParsedFinal is ", type(smthParsedFinal)
-        print len(smthParsedFinal)
-        for n in smthParsedFinal:
+        #print "smthParsedFinal:\n", smth_parsed_final
+        #print "smthParsedFinal is ", type(smth_parsed_final)
+        #print len(smth_parsed_final)
+        for n in smth_parsed_final:
             if n in something:
-                tempLen.append(n)
+                temp_len.append(n)
 
-        print "list which was output to file initially had...                       ", len(something), "tuples"
-        print "after being read in as a string then converted back to a list, it has", len(tempLen), "tuples"
+        #print "list which was output to file initially had...                       ", len(something), "tuples"
+        #print "after being read in as a string then converted back to a list, it has", len(temp_len), "tuples, converted to lists"
 
-        return smthParsedFinal
+        print list_of_lists_smth_parsed_final
+        return list_of_lists_smth_parsed_final
 
 #def removeDupes():
 #    smthParsedND = [for n in smthParsedFinal if n in smthParsedFinal and not ]
 
 
 if __name__ == "__main__":
-    writeSmth(something)
-    loadSmth('smthWrite.txt')
-    print "finished"
+    #write_smth(something)
+    load_smth(file)
+    print "finished with smthWriteLoad"

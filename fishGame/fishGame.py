@@ -19,6 +19,7 @@ from pygame.locals import *
 import random
 import math
 
+
 screenRect = Rect(0,0,640,480)  #sets the screen size
 #screenSize = (640, 480)
 
@@ -40,6 +41,9 @@ def main(): #the main function
     fish_positions = [] # a list of 2-lists containing x,y coordinates of the 'nose' of the fish
     fish_waypoints = [] #not implemented yet
     #list_of_distances_of_fishes_to_foods = []
+    message = 'full_message.txt'
+    message_positions = []
+    write_toggle = 0 # 0 = 'off'; 1 = 'on'.  directs main loop path.
 
     body_range = (-15,15) #number of pixels variation to draw the fish body
     eye_range = (-5,5) #number of pixels variation to draw the fish eye
@@ -76,7 +80,9 @@ def main(): #the main function
                 if pygame.mouse.get_pressed() == (True,False,False):
                     c, d = pygame.mouse.get_pos()
                     food_positions.append([c, d])
-                    print "food_positions = ", food_positions
+                    #message_positions.append((c, d))
+                    #print "food_positions = ", food_positions
+                    #print message_positions
 
             if event.type == KEYDOWN:
 
@@ -106,27 +112,97 @@ def main(): #the main function
 
                 #sets waypoint to random spot on the screen
                 if event.key == K_F8:
-                    g = random.randrange(2,638,1)
-                    h = random.randrange(2,478,1)
+                    g = random.randint(2,638)
+                    h = random.randint(2,478)
                     fish_waypoints.append([g,h])
 
+                if event.key == K_F1:
+                    if cycle_swim_style <= 3:
+                        cycle_swim_style += 1
+                    else:
+                        cycle_swim_style = 1
 
-        #screen.fill((0,0,0)) # clears screen/ fills the screen with black
-        screen.blit(background, (0,0))
-        draw_fishes(fish_positions, fish_variation_randints)
-        draw_foods(food_positions)
-        food_positions = any_food_compare_and_remove_from_list(food_positions, fish_positions)
+                if event.key == K_F12:
+                    # toggles the main loop path from 'normal mode' to 'surprise write mode'
+                    if write_toggle == 0:
+                        food_positions = []
+                        fish_positions = []
+                        message_positions = load_a_list_of_tuples_from_a_file(message)
+                        write_toggle = 1
+                        print 'write_toggle: ', write_toggle
+                    else:
+                        write_toggle = 0
+                        print 'write_toggle: ', write_toggle
+                if event.key == K_BACKSPACE:
+                    #todo: make the '+' key add them back in.  i.e., trade removed/readded items to/from another queue list
+                    food_positions = food_positions[:-1]
+                    message_positions = message_positions[:-1]
+                    print "message_positions: ", message_positions
 
-        list_of_distances_of_fishes_to_foods = returns_a_list_of_distances_of_fishes_to_foods(fish_positions, food_positions)
 
-        move_fishes_towards_food(fish_positions, food_positions, fish_move_distance, cycle_swim_style, list_of_distances_of_fishes_to_foods)
-        #first_food_compare_and_remove_from_list(food_positions, fish_positions)
+        if write_toggle == 0:
+            # -- 'normal mode' -- write toggle is 'off'
 
-        #food_positions = get_that_corn_outta_mah_face(food_positions, fish_positions)
-        fps_clock.tick(fps)
+            #screen.fill((0,0,0)) # clears screen/ fills the screen with black
+            screen.blit(background, (0,0))
+            draw_fishes(fish_positions, fish_variation_randints, write_toggle)
+            draw_foods(food_positions)
+            #food_positions = any_food_compare_and_remove_from_list(food_positions, fish_positions)
+            food_positions = get_that_corn_outta_mah_face(food_positions, fish_positions)
+            list_of_distances_of_fishes_to_foods = returns_a_list_of_distances_of_fishes_to_foods(fish_positions, food_positions)
+            move_fishes_towards_food(fish_positions, food_positions, fish_move_distance, cycle_swim_style, list_of_distances_of_fishes_to_foods, write_toggle, message_positions)
+            #first_food_compare_and_remove_from_list(food_positions, fish_positions)
+            fps_clock.tick(fps)
+            # screen.blit(mouse_cursor,(x,y))     #redraws the mouse cursor image at x,y (cursor position)
+            pygame.display.update()  #not sure what this does
 
-        # screen.blit(mouse_cursor,(x,y))     #redraws the mouse cursor image at x,y (cursor position)
-        pygame.display.update()  #not sure what this does
+        else:
+            #  -- 'surprise write mode' -- this alternate loop is required to allow a the fish to appear to 'write' instead of 'eat'
+
+            screen.blit(background, (0,0))
+            if len(fish_positions) == 0:
+                fish_positions = [message_positions[0]]  #fish appears at next food draw location
+            print 'message_positions: ', message_positions
+            print 'fish_positions: ', fish_positions
+            if len(fish_variation_randints) == 0:
+                fish_variation_randints.append([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+            draw_fishes(fish_positions, fish_variation_randints, write_toggle)
+
+            if len(fish_positions) > 0 and len(message_positions) > 0:
+                for fish_position in fish_positions:
+                    if fish_position == message_positions[0]:
+                        food_positions.append(message_positions[0])
+                        #todo: the following is problematic I think
+                        message_positions = message_positions[1:]
+            else:
+                write_toggle = 0
+
+            draw_foods(food_positions)
+            list_of_distances_of_fishes_to_foods = returns_a_list_of_distances_of_fishes_to_foods(fish_positions, food_positions)
+            move_fishes_towards_food(fish_positions, message_positions, fish_move_distance, cycle_swim_style, list_of_distances_of_fishes_to_foods, write_toggle, message_positions)
+            fps_clock.tick(fps)
+            pygame.display.update()
+            #
+            #
+
+
+def load_a_list_of_tuples_from_a_file(tuple_txt):
+    with open(tuple_txt, 'r') as smth_load:
+        outputThis = smth_load.read()
+        # smthParsed = re.findall('\(.*?\)', outputThis)
+        # smthParsedFinal = [i.strip('()') for i in smthParsed] # LIST COMPREHENSION!  BOOYAH!
+        smth_parsed_final = [tuple(int(i) for i in a.strip('()[]').split(',')) for a in outputThis.split('), (')] # I totally stole this, and it worked
+        #The above command split the string into a list at -> ), ( <-  and then stripped all the () and [], then made a tuple
+        #out of each string, splitting the string at -> , <-  into individual items, creating a list of tuples.
+        list_of_lists_smth_parsed_final = []
+        for n in smth_parsed_final:
+            temp_list = []
+            for i in n:
+                temp_list.append(i)
+            list_of_lists_smth_parsed_final.append(temp_list)
+        #print 'list_of_lists_smth_parsed_final: ', list_of_lists_smth_parsed_final
+        return list_of_lists_smth_parsed_final
+
 
 def lower_fps(my_fps):
     """
@@ -181,7 +257,7 @@ def get_randints_for_fish_variation(body_range, eye_range):
     #print temporary_int_list
     return temporary_random_int_list
 
-def draw_fishes(fish_positions, fish_variation_randints):
+def draw_fishes(fish_positions, fish_variation_randints, write_toggle):
     """
     draws every fish, using fish_positions locations
 
@@ -312,8 +388,8 @@ def returns_a_list_of_distances_of_fishes_to_foods(fish_positions, food_position
     """
 
     fishes_to_foods_distances = []
-    temporary_holding_list = []
     for fish in fish_positions:
+        temporary_holding_list = []
         fish_x = fish[0]
         fish_y = fish[1]
         for food in food_positions:
@@ -321,7 +397,6 @@ def returns_a_list_of_distances_of_fishes_to_foods(fish_positions, food_position
             food_y = food[1]
             temporary_holding_list.append(int(math.hypot(abs(fish_x-food_x), abs(fish_y-food_y))))
         fishes_to_foods_distances.append(temporary_holding_list)
-        temporary_holding_list = []
 
     return fishes_to_foods_distances
 
@@ -348,7 +423,7 @@ def index_of_the_first_smallest_integer_in_the_list(list_of_distances_of_fishes_
             closest_food_distance = integer
     return closest_food_index #TODO: THIS WAS INDENTED ON EXTRA TAB, STOPPED EVERYTHING FROM WORKING D:<
 
-def move_fishes_towards_food(fish_positions, food_positions, fish_move_distance, cycle_swim_style, list_of_distances_of_fishes_to_foods):
+def move_fishes_towards_food(fish_positions, food_positions, fish_move_distance, cycle_swim_style, list_of_distances_of_fishes_to_foods, write_toggle, message_positions):
     """
     Moves each fish towards the food.
 
@@ -365,9 +440,11 @@ def move_fishes_towards_food(fish_positions, food_positions, fish_move_distance,
     #follow_fish_waypoints()
     if len(food_positions) > 0:
         for fish_position in fish_positions:
-            closest_food_index = index_of_the_first_smallest_integer_in_the_list(list_of_distances_of_fishes_to_foods, fish_positions, fish_position)
-            current_food_position = food_positions[closest_food_index]
-            #current_food_position = food_positions[0]
+            if write_toggle == 0 and food_positions > 0:
+                closest_food_index = index_of_the_first_smallest_integer_in_the_list(list_of_distances_of_fishes_to_foods, fish_positions, fish_position)
+                current_food_position = food_positions[closest_food_index]
+            else:
+                current_food_position = message_positions[0]
             food_x_distance_from_fish = abs(fish_position[0] - current_food_position[0])
             food_y_distance_from_fish = abs(fish_position[1] - current_food_position[1])
             # moves the fish if the fish is farther than 'fish_move_distance' pixels from the food
@@ -384,16 +461,24 @@ def move_fishes_towards_food(fish_positions, food_positions, fish_move_distance,
                             # if fish is above or left, changes the x or y coordinate to move closer to the food
                             fish_position[fish_position.index(axis)] = axis + fish_move_distance
                 #swim style 2: only on the lines
-                elif cycle_swim_style == 2:
-                    #todo: I stopped here, because the current_food_position above needs to change fist, refactor.
-                    food_z_distance_from_fish = math.sqrt((food_x_distance_from_fish^2) + (food_y_distance_from_fish^2))
+                #elif cycle_swim_style == 2:
+                    #todo: swim directly towards closest_food_index diagonally
+                    # get coordinates by extrapolating from
 
-
+                #elif cycle_swim_style = 3:
+                    #todo: swim only two directions, only one time each, on the axes, not diagonally, towards the food
+                    # e.g. left to 0 y axis, then down to food.
 
             else:
                 for axis in fish_position:
                     #if food is less than 'fish_move_distance' pixels away from fish, fish arrives at food
                     fish_position[fish_position.index(axis)] = current_food_position[fish_position.index(axis)]
+
+#def write message():
+    #list_from_file = write_position
+
+
+
 
 def test():
     """
@@ -412,9 +497,9 @@ def TESTING_fishes_to_foods_distances():
     fish_positions = [[50,50],[200,200],[500,500]]
     food_positions = [[100,100],[200,200],[300,300]]
 
-    fishes_to_foods_distances = []
-    diagonal_distance_from_one_fish_to_food = []
     for fish in fish_positions:
+        fishes_to_foods_distances = []
+        diagonal_distance_from_one_fish_to_food = []
         fish_x = fish[0]
         fish_y = fish[1]
         for food in food_positions:
@@ -422,14 +507,9 @@ def TESTING_fishes_to_foods_distances():
             food_y = food[1]
             diagonal_distance_from_one_fish_to_food.append(int(math.hypot(abs(fish_x-food_x), abs(fish_y-food_y))))
         fishes_to_foods_distances.append(diagonal_distance_from_one_fish_to_food) #Todo: this line as well
-        diagonal_distance_from_one_fish_to_food = []  #Todo: Bob, is this necessary to separate the "appends" in this loop?
 
         print "diag", diagonal_distance_from_one_fish_to_food
         print "fishes", fishes_to_foods_distances
-
-    #todo: this does not give the desired output, namely a list of 3 sublists, each for an iteration of a fish over all food.
-    #todo:  why are all 3 lists updating? if anything, it should have [[fish1],[fish 1 and 2], [fish 1,2 and 3]]
-    #todo: but instead it
 
         #return fishes_to_foods_distances
 
