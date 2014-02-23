@@ -18,15 +18,17 @@ import pygame, sys
 from pygame.locals import *
 import random
 import math
+import json
 
+with open('config.json', 'r') as json_config_file:
+    settings = json.load(json_config_file)
 
 screenRect = Rect(0,0,640,480)  #sets the screen size
-#screenSize = (640, 480)
 
-BLUE = (0, 0, 255)
-YELLOW = (255, 255, 0)
-WHITE = (255, 255, 255)
-bg_image = 'aquarium.jpg'
+BLUE = settings["BLUE"]
+YELLOW = settings["YELLOW"]
+WHITE = settings["WHITE"]
+bg_image = settings["bg_image"]
 #body_range = [-5,5,1] #number of pixels variation to draw the body
 #random_range = 4 #number of pixels variation to draw fish eye
 
@@ -37,22 +39,22 @@ def main(): #the main function
     global background
     global screen
 
-    food_positions = [] # a list of 2-lists containing x,y coordinates of 'food'
-    fish_positions = [] # a list of 2-lists containing x,y coordinates of the 'nose' of the fish
-    fish_waypoints = [] #not implemented yet
+    food_positions = settings["food_positions"] # a list of 2-lists containing x,y coordinates of 'food'
+    fish_positions = settings["fish_positions"] # a list of 2-lists containing x,y coordinates of the 'nose' of the fish
+    fish_waypoints = settings["fish_waypoints"] #not implemented yet
     #list_of_distances_of_fishes_to_foods = []
-    message = 'full_message.txt'
-    message_positions = []
-    write_toggle = 0 # 0 = 'off'; 1 = 'on'.  directs main loop path.
+    message = settings["message"]
+    message_positions = settings["message_positions"]
+    write_toggle = settings["write_toggle"] # 0 = 'off'; 1 = 'on'.  directs main loop path.
 
-    body_range = (-15,15) #number of pixels variation to draw the fish body
-    eye_range = (-5,5) #number of pixels variation to draw the fish eye
-    fish_variation_randints = [] #a list of 14-lists, each item of which will provide variation for each fish body coordinate
-    cycle_swim_style = 1
+    body_range = settings["body_range"] #number of pixels variation to draw the fish body
+    eye_range = settings["eye_range"] #number of pixels variation to draw the fish eye
+    fish_variation_randints = settings["fish_variation_randints"] #a list of 14-lists, each item of which will provide variation for each fish body coordinate
+    cycle_swim_style = settings["cycle_swim_style"]
 
     fps_clock = pygame.time.Clock()  #this is for syncing fps in the game.
-    fps = 100 # maximum frames per second (main loops per 1000 milliseconds
-    fish_move_distance = 1 # in pixels
+    fps = settings["fps"] # maximum frames per second (main loops per 1000 milliseconds
+    fish_move_distance = settings["fish_move_distance"] # in pixels
 
     screen = pygame.display.set_mode((screenRect.size),0,32) # this creates the screen
     pygame.display.set_caption('~~Ultimate Fish Game~~ Right Click: FISH | Left Click: FOOD | Escape: CLEAR | SPEED: 1+ / 2- / 3= ') # the title

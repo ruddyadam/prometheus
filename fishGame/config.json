@@ -1,0 +1,18 @@
+{
+	"BLUE": [0, 0, 255], 
+	"YELLOW": [255, 255, 0], 
+	"WHITE": [255, 255, 255], 
+	"bg_image": "aquarium.jpg", 
+	"food_positions": [], 
+	"fish_positions": [], 
+	"fish_waypoints": [],
+	"message": "full_message.txt", 
+	"message_positions": [], 
+	"write_toggle": 0, 
+	"body_range": [-15,15], 
+	"eye_range": [-5,5], 
+	"fish_variation_randints": [], 
+	"cycle_swim_style": 1, 
+	"fps": 100, 
+	"fish_move_distance": 1 
+}
