@@ -54,8 +54,8 @@ def main():
     fish_positions = settings["fish_positions"]
 
     # The special F12 message.
-    message = settings["message"]
-    message_positions = settings["message_positions"]
+    message = "full_message.txt"
+    message_positions = []
 
     # This toggles the "writing" functionality of F12.
     write_toggle = settings["write_toggle"]
@@ -66,8 +66,8 @@ def main():
     # The maximum amount of variation of a new fish eye from the default fish eye.
     maximum_fish_eye_variation = settings["maximum_fish_eye_variation"]
 
-    #a list comprised of 14 integers, each integer will provide variation for each fish body coordinate.
-    fish_variation_randints = settings["fish_variation_randints"]
+    #a list which will be populated by 14 integers, each integer will provide variation for each fish body coordinate.
+    fish_variation_randints = []
 
     # The selection for the pattern the fish uses to swim to the food.
     cycle_swim_style = settings["cycle_swim_style"]

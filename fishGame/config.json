@@ -6,13 +6,10 @@
 	"food_positions": [], 
 	"fish_positions": [], 
 	"fish_waypoints": [],
-	"message": "full_message.txt", 
-	"message_positions": [], 
-	"write_toggle": 0, 
+	"write_toggle": 0,
 	"maximum_fish_body_variation": [-15,15],
 	"maximum_fish_eye_variation": [-5,5],
-	"fish_variation_randints": [], 
-	"cycle_swim_style": 1, 
+	"cycle_swim_style": 1,
 	"fps": 100, 
 	"fish_move_distance": 1 
 }
