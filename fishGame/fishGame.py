@@ -23,13 +23,15 @@ if there is no food, the fish stops.
 #       win scenario:  high score... "food total" when detonation occurs.
 
 
-import pygame, sys
+import pygame, sys, os
 from pygame.locals import *
 import random
 import math
 import json
 
-with open('config.json', 'r') as json_config_file:
+json_config_location = os.getcwd() +'\config.json'
+
+with open(json_config_location, 'r') as json_config_file:
     settings = json.load(json_config_file)
 
 screenRect = Rect(0,0,640,480)
